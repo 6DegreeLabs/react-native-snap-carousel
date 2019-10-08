@@ -38,6 +38,7 @@ export default class Carousel extends Component {
         activeAnimationOptions: PropTypes.object,
         activeSlideAlignment: PropTypes.oneOf(['center', 'end', 'start']),
         activeSlideOffset: PropTypes.number,
+        activeSlideProgressiveOffset: PropTypes.number,
         apparitionDelay: PropTypes.number,
         autoplay: PropTypes.bool,
         autoplayDelay: PropTypes.number,
@@ -75,6 +76,7 @@ export default class Carousel extends Component {
         activeAnimationOptions: null,
         activeSlideAlignment: 'center',
         activeSlideOffset: 20,
+        activeSlideProgressiveOffset: 0,
         apparitionDelay: 0,
         autoplay: false,
         autoplayDelay: 1000,
@@ -566,8 +568,9 @@ export default class Carousel extends Component {
     }
 
     _initPositionsAndInterpolators (props = this.props) {
-        const { data, itemWidth, itemHeight, scrollInterpolator, vertical } = props;
-        const sizeRef = vertical ? itemHeight : itemWidth;
+        const { data, itemWidth, itemHeight, activeSlideProgressiveOffset, scrollInterpolator, vertical } = props;
+        const adjustedItemWidth = itemWidth - activeSlideProgressiveOffset;
+        const sizeRef = vertical ? itemHeight : adjustedItemWidth;
 
         if (!data || !data.length) {
             return;
