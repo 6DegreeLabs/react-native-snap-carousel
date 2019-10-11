@@ -1108,19 +1108,21 @@ export default class Carousel extends Component {
         clearInterval(this._autoplayInterval);
     }
 
+
     stopAutoplay () {
         this._autoplay = false;
         this.pauseAutoPlay();
     }
 
-    snapToItem (index, animated = true, fireCallback = true) {
+    snapToItem (index, animated = true, fireCallback = true, forceSnap = false) {
+
         if (!index || index < 0) {
             index = 0;
         }
 
         const positionIndex = this._getPositionIndex(index);
 
-        if (positionIndex === this._activeItem) {
+        if (!forceSnap && (positionIndex === this._activeItem)) {
             return;
         }
 
