@@ -68,7 +68,8 @@ export default class Carousel extends Component {
         useScrollView: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
         vertical: PropTypes.bool,
         onBeforeSnapToItem: PropTypes.func,
-        onSnapToItem: PropTypes.func
+        onSnapToItem: PropTypes.func,
+        onActiveItemChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -763,7 +764,7 @@ export default class Carousel extends Component {
     }
 
     _onScroll (event) {
-        const { callbackOffsetMargin, enableMomentum, onScroll } = this.props;
+        const { callbackOffsetMargin, enableMomentum, onScroll, onActiveItemChange } = this.props;
 
         const scrollOffset = event ? this._getScrollOffset(event) : this._currentContentOffset;
         const nextActiveItem = this._getActiveItem(scrollOffset);
@@ -776,8 +777,14 @@ export default class Carousel extends Component {
         this._onScrollTriggered = true;
         this._lastScrollDate = Date.now();
 
-        if (this._activeItem !== nextActiveItem && this._shouldUseCustomAnimation()) {
-            this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
+        if (this._activeItem !== nextActiveItem) {
+            if (onActiveItemChange) {
+                onActiveItemChange();
+            }
+
+            if (this._shouldUseCustomAnimation()) {
+                this._playCustomSlideAnimation(this._activeItem, nextActiveItem);
+            }
         }
 
         if (enableMomentum) {
