@@ -1122,7 +1122,6 @@ export default class Carousel extends Component {
     }
 
     snapToItem (index, animated = true, fireCallback = true, forceSnap = false) {
-
         if (!index || index < 0) {
             index = 0;
         }
