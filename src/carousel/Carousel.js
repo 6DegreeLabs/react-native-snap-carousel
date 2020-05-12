@@ -69,7 +69,8 @@ export default class Carousel extends Component {
         vertical: PropTypes.bool,
         onBeforeSnapToItem: PropTypes.func,
         onSnapToItem: PropTypes.func,
-        onActiveItemChange: PropTypes.func
+        onActiveItemChange: PropTypes.func,
+        onInterpolatorInitialization: PropTypes.func
     };
 
     static defaultProps = {
@@ -567,7 +568,7 @@ export default class Carousel extends Component {
     }
 
     _initPositionsAndInterpolators (props = this.props) {
-        const { data, itemWidth, itemHeight, activeSlideProgressiveOffset, scrollInterpolator, vertical } = props;
+        const { data, itemWidth, itemHeight, activeSlideProgressiveOffset, scrollInterpolator, vertical, onInterpolatorInitialization } = props;
         const adjustedItemWidth = itemWidth - activeSlideProgressiveOffset;
         const sizeRef = vertical ? itemHeight : adjustedItemWidth;
 
@@ -615,7 +616,11 @@ export default class Carousel extends Component {
             interpolators.push(animatedValue);
         });
 
-        this.setState({ interpolators });
+        this.setState({ interpolators }, () => {
+            if (onInterpolatorInitialization) {
+                onInterpolatorInitialization(interpolators);
+            }
+        });
     }
 
     _getSlideAnimation (index, toValue) {
