@@ -346,8 +346,13 @@ export default class Carousel extends Component {
     }
 
     _shouldAnimateSlides (props = this.props) {
-        const { scrollInterpolator, slideInterpolatedStyle } = props;
-        return !!scrollInterpolator ||
+        // Always initialize animation values for items
+        return true;
+
+        const { inactiveSlideOpacity, inactiveSlideScale, scrollInterpolator, slideInterpolatedStyle } = props;
+        return inactiveSlideOpacity < 1 ||
+            inactiveSlideScale < 1 ||
+            !!scrollInterpolator ||
             !!slideInterpolatedStyle ||
             this._shouldUseShiftLayout() ||
             this._shouldUseStackLayout() ||
