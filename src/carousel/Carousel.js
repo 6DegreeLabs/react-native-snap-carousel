@@ -488,6 +488,12 @@ export default class Carousel extends Component {
     }
 
     _getWrappedRef () {
+        if (this._carouselRef && (
+            (this._needsScrollView() && this._carouselRef.scrollTo) ||
+            (!this._needsScrollView() && this._carouselRef.scrollToOffset)
+        )) {
+            return this._carouselRef;
+        }
         // https://github.com/facebook/react-native/issues/10635
         // https://stackoverflow.com/a/48786374/8412141
         return this._carouselRef && this._carouselRef.getNode && this._carouselRef.getNode();
@@ -928,6 +934,10 @@ export default class Carousel extends Component {
             return;
         }
 
+        if (this._currentContentOffset === this._scrollEndOffset) {
+            return;
+        }
+
         this._scrollEndOffset = this._currentContentOffset;
         this._scrollEndActive = this._getActiveItem(this._scrollEndOffset);
 
@@ -1051,6 +1061,8 @@ export default class Carousel extends Component {
         }
 
         this._scrollTo(this._scrollOffsetRef, animated);
+
+        this._scrollEndOffset = this._currentContentOffset;
 
         if (enableMomentum) {
             // iOS fix, check the note in the constructor
